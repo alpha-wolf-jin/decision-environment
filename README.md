@@ -136,3 +136,49 @@ exit
 # podman exec -it --user 0 536da32c923a /bin/bash 
 bash-5.1# 
 ```
+
+# Ansible builder definition file for Kafka
+
+```
+# cat de-kafka-02.yaml 
+version: 3
+
+images:
+  base_image:
+    name: 'registry.redhat.io/ansible-automation-platform-24/de-supported-rhel9:1.0.0-68'
+
+dependencies:
+  galaxy:
+    collections:
+      - ansible.eda
+  python:
+    - aiokafka
+    - wheel
+  system:
+    - python3-systemd [platform:rpm]
+    - systemd-devel [platform:rpm]
+    - gcc [platform:rpm]
+    - python3-devel [platform:rpm]
+    - python3-pip [platform:rpm]
+  python_interpreter:
+    package_system: "python39"
+
+options:
+  package_manager_path: /usr/bin/microdnf
+
+```
+
+In order to make ansible-builder work well, we need to add 'python3-systemd', 'systemd-devel', 'gcc', 'python3-devel', and 'python3-pip'. 
+
+What the Kafka needs is python library 'aiokafka'.
+
+
+# Ansible builder de image for Kafka
+
+```
+# ansible-builder build -f de-kafka-01.yaml -t de-kafka-01:latest
+Running command:
+  podman build -f context/Containerfile -t de-kafka-01:latest context
+Complete! The build context can be found at: /root/ansi/decision-environment/context
+
+```
