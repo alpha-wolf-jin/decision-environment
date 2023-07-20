@@ -182,3 +182,44 @@ Running command:
 Complete! The build context can be found at: /root/ansi/decision-environment/context
 
 ```
+
+# Things to note
+
+The `additional_build_steps` should work, but not at this moment.
+
+```
+...
+additional_build_steps: 
+  prepend: |
+    RUN whoami
+    RUN cat /etc/os-release
+  append:
+    - RUN echo This is a post-install command!
+    - RUN ls -la /etc
+...
+```
+
+Some rpm package is not available, for exmaple: tmux 
+
+## Work Around
+
+Directly modify `context` directory and ./context/Containerfile file
+
+**Copy rpm Package**
+```
+# ll context/_rpm
+total 480
+-rw-r--r--. 1 root root 487866 Jul 14 13:11 tmux-3.2a-4.el9.x86_64.rpm
+```
+
+**Insert actions into ./context/Containerfile**
+```
+COPY _rpm/tmux-3.2a-4.el9.x86_64.rpm tmux-3.2a-4.el9.x86_64.rpm
+RUN rpm -ivh tmux-3.2a-4.el9.x86_64.rpm
+RUN rm -f tmux-3.2a-4.el9.x86_64.rpm
+```
+
+**Use Podman to builder image**
+```
+# podman build -f context/Containerfile -t de-kafka-02:latest context
+```
