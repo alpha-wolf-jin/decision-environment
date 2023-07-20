@@ -110,3 +110,29 @@ python3-pip-21.2.3-6.el9.noarch
 package python3-systemd is not installed
 package systemd-devel is not installed
 ```
+
+**Reuse existing container :  Start the stopped container**
+```
+# podman ps -a
+CONTAINER ID  IMAGE                                                                          COMMAND     CREATED         STATUS                     PORTS       NAMES
+baa5fec4911f  localhost/rulebas-01:latest                                                    /bin/bash   4 days ago      Exited (143) 4 days ago                rulebase-02
+536da32c923a  registry.redhat.io/ansible-automation-platform-24/de-supported-rhel9:1.0.0-68  /bin/bash   11 minutes ago  Exited (0) 19 seconds ago              de-01
+
+[root@aap-eda decision-environment]# podman start 536da32c923a
+536da32c923a
+
+[root@aap-eda decision-environment]# podman ps
+CONTAINER ID  IMAGE                                                                          COMMAND     CREATED         STATUS        PORTS       NAMES
+536da32c923a  registry.redhat.io/ansible-automation-platform-24/de-supported-rhel9:1.0.0-68  /bin/bash   13 minutes ago  Up 6 seconds              de-01
+```
+**Reuse existing container :  access running container as root**
+```
+# podman exec -it 536da32c923a /bin/bash 
+bash-5.1# 
+
+bash-5.1# exit
+exit
+
+[root@aap-eda decision-environment]# podman exec -it --user 0 536da32c923a /bin/bash 
+bash-5.1# 
+```
