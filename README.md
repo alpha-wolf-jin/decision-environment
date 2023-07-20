@@ -22,12 +22,15 @@ git add . ; git commit -a -m "update README" ; git push -u origin main
 ```
 
 **Verify Java version**
+```
 bash-5.1# java -version
 openjdk version "17.0.7" 2023-04-18 LTS
 OpenJDK Runtime Environment (Red_Hat-17.0.7.0.7-2) (build 17.0.7+7-LTS)
 OpenJDK 64-Bit Server VM (Red_Hat-17.0.7.0.7-2) (build 17.0.7+7-LTS, mixed mode, sharing)
+```
 
 **Verify python libraries**
+```
 bash-5.1# pip3 freeze
 aiobotocore==2.5.0
 aiodns==3.0.0
