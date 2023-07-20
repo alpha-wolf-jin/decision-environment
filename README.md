@@ -203,6 +203,8 @@ Some rpm package is not available, for exmaple: tmux
 
 ## Work Around
 
+When `ansible-builder` cannot meet the requirement, we can look into podman build.
+
 Directly modify `context` directory and ./context/Containerfile file
 
 **Copy rpm Package**
