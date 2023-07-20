@@ -133,6 +133,6 @@ bash-5.1#
 bash-5.1# exit
 exit
 
-[root@aap-eda decision-environment]# podman exec -it --user 0 536da32c923a /bin/bash 
+# podman exec -it --user 0 536da32c923a /bin/bash 
 bash-5.1# 
 ```
