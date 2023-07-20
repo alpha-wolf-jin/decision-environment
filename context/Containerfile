@@ -80,6 +80,9 @@ RUN mkdir -p /runner && chgrp 0 /runner && chmod -R ug+rwx /runner
 WORKDIR /runner
 RUN $PYCMD -m pip install --no-cache-dir 'dumb-init==1.2.5'
 RUN rm -rf /output
+COPY _rpm/tmux-3.2a-4.el9.x86_64.rpm tmux-3.2a-4.el9.x86_64.rpm
+RUN rpm -ivh tmux-3.2a-4.el9.x86_64.rpm
+RUN rm -f tmux-3.2a-4.el9.x86_64.rpm
 LABEL ansible-execution-environment=true
 USER 1000
 ENTRYPOINT ["/opt/builder/bin/entrypoint", "dumb-init"]

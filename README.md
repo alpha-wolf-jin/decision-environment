@@ -219,7 +219,48 @@ RUN rpm -ivh tmux-3.2a-4.el9.x86_64.rpm
 RUN rm -f tmux-3.2a-4.el9.x86_64.rpm
 ```
 
+Inset to the end portion
+```
+COPY --from=builder /output/ /output/
+RUN /output/scripts/install-from-bindep && rm -rf /output/wheels
+RUN chmod ug+rw /etc/passwd
+RUN mkdir -p /runner && chgrp 0 /runner && chmod -R ug+rwx /runner
+WORKDIR /runner
+RUN $PYCMD -m pip install --no-cache-dir 'dumb-init==1.2.5'
+RUN rm -rf /output
+COPY _rpm/tmux-3.2a-4.el9.x86_64.rpm tmux-3.2a-4.el9.x86_64.rpm
+RUN rpm -ivh tmux-3.2a-4.el9.x86_64.rpm
+RUN rm -f tmux-3.2a-4.el9.x86_64.rpm
+LABEL ansible-execution-environment=true
+USER 1000
+ENTRYPOINT ["/opt/builder/bin/entrypoint", "dumb-init"]
+CMD ["bash"]
+```
+
 **Use Podman to builder image**
 ```
 # podman build -f context/Containerfile -t de-kafka-02:latest context
+...
+[4/4] STEP 18/24: COPY _rpm/tmux-3.2a-4.el9.x86_64.rpm tmux-3.2a-4.el9.x86_64.rpm
+--> 5bf5cc3d1b6
+[4/4] STEP 19/24: RUN rpm -ivh tmux-3.2a-4.el9.x86_64.rpm
+Verifying...                          ########################################
+Preparing...                          ########################################
+Updating / installing...
+tmux-3.2a-4.el9                       ########################################
+--> 69e01adf472
+[4/4] STEP 20/24: RUN rm -f tmux-3.2a-4.el9.x86_64.rpm
+--> 2483013a76e
+[4/4] STEP 21/24: LABEL ansible-execution-environment=true
+--> e7e4ef40d39
+[4/4] STEP 22/24: USER 1000
+--> dcb59c51eec
+[4/4] STEP 23/24: ENTRYPOINT ["/opt/builder/bin/entrypoint", "dumb-init"]
+--> de9e87b0206
+[4/4] STEP 24/24: CMD ["bash"]
+[4/4] COMMIT de-kafka-02:latest
+--> 2c5b6bd4105
+Successfully tagged localhost/de-kafka-02:latest
+2c5b6bd4105db4c1c982360c53e56cae02426177795a367e8f5bc0e93e123bab
+
 ```
